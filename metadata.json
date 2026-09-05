@@ -1,0 +1,6 @@
+{
+  "name": "Aura Nexus - Hospital Appointment & Live Token System",
+  "description": "Futuristic hospital appointment booking and real-time live queue token tracking system featuring patient booking, doctor consultation queue, and admin reception management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
