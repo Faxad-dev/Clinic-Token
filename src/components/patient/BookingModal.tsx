@@ -77,19 +77,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const selectedSlot = doctor.schedules.find((s) => s.shift === selectedShift);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-xl max-h-[94vh] flex flex-col rounded-3xl bg-[#0e1422] border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.25)] overflow-hidden">
-        {/* Glow Header Bar */}
-        <div className="bg-gradient-to-r from-cyan-950 via-slate-900 to-blue-950 px-4 sm:px-6 py-4 border-b border-cyan-500/20 flex items-center justify-between shrink-0">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-xl max-h-[94vh] flex flex-col rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden">
+        {/* Header Bar */}
+        <div className="bg-slate-50 px-4 sm:px-6 py-4 border-b border-slate-200 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
+            <div className="p-2 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 shrink-0">
               <Ticket className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-white tracking-tight truncate">
+              <h3 className="text-base font-bold text-slate-900 tracking-tight truncate">
                 {confirmedToken ? 'Token Issued Successfully' : 'Book Instant OPD Token'}
               </h3>
-              <p className="text-xs text-slate-400 font-mono truncate">
+              <p className="text-xs text-slate-500 font-mono truncate">
                 {doctor.name} • {doctor.chamberNumber}
               </p>
             </div>
@@ -97,7 +97,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer shrink-0"
+            className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -106,38 +106,38 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {confirmedToken ? (
           /* Confirmation Pass Screen */
           <div className="p-4 sm:p-6 md:p-8 space-y-6 overflow-y-auto">
-            <div className="relative p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-cyan-500/40 text-center shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-3">
-                <CheckCircle2 className="w-4 h-4" />
+            <div className="relative p-6 rounded-2xl bg-blue-50/30 border border-blue-200 text-center shadow-sm">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold mb-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>CONFIRMED IN QUEUE</span>
               </div>
 
-              <div className="text-xs uppercase font-mono text-slate-400">Your Sequential Token Number</div>
-              <div className="text-5xl sm:text-6xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-200 to-white my-2 tracking-widest">
+              <div className="text-xs uppercase font-mono text-slate-500 font-medium">Your Sequential Token Number</div>
+              <div className="text-5xl sm:text-6xl font-extrabold font-mono text-blue-700 my-2 tracking-widest">
                 {confirmedToken.tokenDisplay}
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-slate-800 text-left text-xs">
+              <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-slate-200 text-left text-xs">
                 <div>
                   <span className="text-slate-500 block font-mono">Patient</span>
-                  <span className="font-semibold text-slate-200 text-sm">{confirmedToken.patientName}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{confirmedToken.patientName}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block font-mono">Consultant</span>
-                  <span className="font-semibold text-slate-200 text-sm">{confirmedToken.doctorName}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{confirmedToken.doctorName}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block font-mono">Chamber</span>
-                  <span className="font-semibold text-cyan-300 text-sm">{doctor.chamberNumber}</span>
+                  <span className="font-semibold text-blue-700 text-sm">{doctor.chamberNumber}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block font-mono">Estimated Rolling Time</span>
-                  <span className="font-semibold text-emerald-400 text-sm">~{doctor.avgConsultationMinutes}m / patient</span>
+                  <span className="font-semibold text-emerald-700 text-sm">~{doctor.avgConsultationMinutes}m / patient</span>
                 </div>
               </div>
 
-              <div className="mt-4 p-3 rounded-xl bg-cyan-950/30 border border-cyan-500/20 text-xs text-cyan-300 text-center">
-                📢 Sound alerts will automatically ring when your turn is 2 tokens away!
+              <div className="mt-4 p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 text-center font-medium">
+                📢 Audio alerts will automatically ring when your turn is 2 tokens away!
               </div>
             </div>
 
@@ -148,7 +148,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   onBookingConfirmed(confirmedToken);
                   onClose();
                 }}
-                className="flex-1 py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 py-3 px-4 rounded-xl font-semibold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Open Live Queue Tracker</span>
                 <ArrowRight className="w-4 h-4" />
@@ -156,9 +156,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               <button
                 onClick={() => window.print()}
-                className="py-3 px-4 rounded-xl font-medium text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="py-3 px-4 rounded-xl font-semibold text-xs bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
               >
-                <Printer className="w-4 h-4 text-slate-400" />
+                <Printer className="w-4 h-4 text-slate-500" />
                 <span>Print Ticket</span>
               </button>
             </div>
@@ -167,29 +167,29 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           /* Booking Form */
           <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
             {error && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 shrink-0" />
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Doctor summary strip */}
-            <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
                   src={doctor.photoUrl}
                   alt={doctor.name}
                   referrerPolicy="no-referrer"
-                  className="w-12 h-12 rounded-xl object-cover border border-cyan-500/30"
+                  className="w-12 h-12 rounded-xl object-cover border border-slate-200"
                 />
                 <div>
-                  <div className="font-bold text-sm text-white">{doctor.name}</div>
-                  <div className="text-xs text-slate-400">{doctor.specialization}</div>
+                  <div className="font-bold text-sm text-slate-900">{doctor.name}</div>
+                  <div className="text-xs text-slate-500">{doctor.specialization}</div>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-[10px] uppercase font-mono text-slate-400 block">Fee</span>
-                <span className="text-sm font-bold font-mono text-cyan-300">
+                <span className="text-[10px] uppercase font-mono text-slate-500 block font-medium">Fee</span>
+                <span className="text-sm font-bold font-mono text-blue-700">
                   PKR {doctor.consultationFee.toLocaleString()}
                 </span>
               </div>
@@ -197,7 +197,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
             {/* Shift selector */}
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">
+              <label className="block text-xs font-mono uppercase tracking-wider text-slate-500 font-semibold mb-2">
                 Select Today's Consultation Shift
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -214,19 +214,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       onClick={() => setSelectedShift(s.shift)}
                       className={`p-3 rounded-xl border text-left transition-all ${
                         isSelected
-                          ? 'bg-cyan-500/15 border-cyan-400 text-white shadow-[0_0_15px_rgba(6,182,212,0.2)]'
-                          : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                          ? 'bg-blue-50/60 border-blue-600 text-slate-900 shadow-sm ring-1 ring-blue-600'
+                          : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                       } ${isFull ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-xs capitalize text-white">
+                        <span className="font-bold text-xs capitalize text-slate-900">
                           {s.shift} Slot
                         </span>
-                        <span className="text-[10px] font-mono text-cyan-400">
+                        <span className="text-[10px] font-mono text-blue-700 font-semibold">
                           {remaining} Left
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono mt-1">
+                      <div className="text-[11px] text-slate-500 font-mono mt-1">
                         {s.timeRange}
                       </div>
                     </button>
@@ -239,7 +239,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                  <label className="block text-xs font-mono uppercase text-slate-600 font-semibold mb-1">
                     Patient Full Name *
                   </label>
                   <input
@@ -249,12 +249,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
                     placeholder="e.g. Asad Mehmood"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                  <label className="block text-xs font-mono uppercase text-slate-600 font-semibold mb-1">
                     Contact Mobile *
                   </label>
                   <input
@@ -264,14 +264,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     value={patientPhone}
                     onChange={(e) => setPatientPhone(e.target.value)}
                     placeholder="e.g. +92 300 1234567"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                  <label className="block text-xs font-mono uppercase text-slate-600 font-semibold mb-1">
                     Age *
                   </label>
                   <input
@@ -282,18 +282,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     required
                     value={patientAge}
                     onChange={(e) => setPatientAge(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                  <label className="block text-xs font-mono uppercase text-slate-600 font-semibold mb-1">
                     Gender
                   </label>
                   <select
                     value={patientGender}
                     onChange={(e) => setPatientGender(e.target.value as 'male' | 'female' | 'other')}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 focus:outline-none shadow-sm"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -303,7 +303,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                <label className="block text-xs font-mono uppercase text-slate-600 font-semibold mb-1">
                   Primary Symptoms / Health Concern
                 </label>
                 <textarea
@@ -312,24 +312,24 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
                   placeholder="Describe your symptoms (e.g. persistent cough, fever for 2 days, sharp pain)..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 focus:outline-none resize-none"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none shadow-sm"
                 />
               </div>
 
               {/* Priority Checkbox */}
-              <div className="p-3 rounded-xl bg-slate-900/50 border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ShieldAlert className="w-4 h-4 text-amber-400" />
+                  <ShieldAlert className="w-4 h-4 text-amber-600" />
                   <div>
-                    <div className="text-xs font-medium text-slate-200">Urgent Triage Request</div>
-                    <div className="text-[10px] text-slate-400">Flags token for clinical emergency queue precedence</div>
+                    <div className="text-xs font-semibold text-slate-900">Urgent Triage Request</div>
+                    <div className="text-[10px] text-slate-600">Flags token for clinical emergency queue precedence</div>
                   </div>
                 </div>
                 <input
                   type="checkbox"
                   checked={isEmergencyPriority}
                   onChange={(e) => setIsEmergencyPriority(e.target.checked)}
-                  className="w-4 h-4 accent-cyan-400 rounded cursor-pointer"
+                  className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                 />
               </div>
             </div>
@@ -339,9 +339,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               <button
                 id="btn-submit-booking"
                 type="submit"
-                className="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 rounded-xl font-semibold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Ticket className="w-4 h-4 text-slate-950" />
+                <Ticket className="w-4 h-4 text-white" />
                 <span>Confirm Booking & Generate Token</span>
               </button>
             </div>
