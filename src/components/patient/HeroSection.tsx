@@ -22,6 +22,7 @@ import { Doctor, DepartmentId } from '../../types';
 interface HeroSectionProps {
   onBookClick: () => void;
   onTrackClick: () => void;
+  onCinematicClick?: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onBookDoctor?: (doctor: Doctor) => void;
@@ -42,6 +43,7 @@ const COMMON_SYMPTOM_SUGGESTIONS = [
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onBookClick,
   onTrackClick,
+  onCinematicClick,
   searchQuery,
   setSearchQuery,
   onBookDoctor,
@@ -172,6 +174,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Activity className="w-4 h-4 text-blue-600" />
               <span>Live Token Tracker</span>
             </button>
+
+            {onCinematicClick && (
+              <button
+                id="hero-btn-cinematic"
+                onClick={onCinematicClick}
+                className="w-full sm:w-auto px-5 py-3.5 rounded-xl font-semibold text-sm bg-slate-900 hover:bg-slate-800 text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm group"
+                title="View 3D Interactive Mockup Animation"
+              >
+                <Sparkles className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <span>3D Cinematic View</span>
+              </button>
+            )}
           </div>
 
           {/* Quick Doctor / Disease Search with Real-time Response & Data Not Found Card */}

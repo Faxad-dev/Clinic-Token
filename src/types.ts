@@ -87,4 +87,4 @@ export interface DoctorAuthAccount {
   registeredAt: string;
 }
 
-export type ActivePanel = 'patient' | 'tracker' | 'doctor' | 'admin' | 'simulator';
+export type ActivePanel = 'patient' | 'tracker' | 'doctor' | 'admin' | 'simulator' | 'cinematic';

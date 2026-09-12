@@ -231,10 +231,38 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </>
               )}
             </button>
+
+            <button
+              id="nav-tab-cinematic"
+              onClick={() => handleTabClick('cinematic')}
+              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                activePanel === 'cinematic'
+                  ? 'bg-blue-600 text-white shadow-sm border border-blue-600'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Sparkles className={`w-3.5 h-3.5 ${activePanel === 'cinematic' ? 'text-cyan-200' : 'text-blue-600'}`} />
+              <span>3D Animation</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping"></span>
+            </button>
           </nav>
 
-          {/* Desktop Live Simulator quick toggle */}
-          <div className="hidden lg:flex items-center">
+          {/* Desktop Live Simulator and 3D Cinematic quick toggles */}
+          <div className="hidden lg:flex items-center gap-2">
+            <button
+              id="btn-cinematic-mode"
+              onClick={() => handleTabClick('cinematic')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                activePanel === 'cinematic'
+                  ? 'bg-gradient-to-r from-blue-900 to-indigo-950 text-white border-blue-900 shadow-md'
+                  : 'bg-white text-slate-800 border-slate-300 hover:border-slate-400 hover:bg-slate-50'
+              }`}
+              title="Interactive 3D Hardware Mockup Hero Animation"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-500" />
+              <span>3D Hero</span>
+            </button>
+
             <button
               id="btn-simulator-mode"
               onClick={() => handleTabClick('simulator')}
@@ -403,6 +431,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="text-left">
                   <div className="font-bold">Split Screen Live Simulator</div>
                   <div className="text-[10px] text-slate-400 font-normal">Side-by-side doctor desk + patient mobile screen</div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => handleTabClick('cinematic')}
+              className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                activePanel === 'cinematic'
+                  ? 'bg-gradient-to-r from-blue-900 to-indigo-950 text-white border border-blue-900'
+                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 rounded-lg bg-indigo-100 text-indigo-700">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold">3D Cinematic Hardware Mockup</div>
+                  <div className="text-[10px] text-slate-400 font-normal">Scroll-driven 3D device tilt & timeline animation</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
