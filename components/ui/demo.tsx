@@ -15,49 +15,49 @@ const data = [
   {
     title: 'Home',
     icon: (
-      <HomeIcon className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <HomeIcon className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Products',
     icon: (
-      <Package className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <Package className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Components',
     icon: (
-      <Component className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <Component className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Activity',
     icon: (
-      <Activity className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <Activity className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Change Log',
     icon: (
-      <ScrollText className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <ScrollText className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Email',
     icon: (
-      <Mail className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <Mail className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
   {
     title: 'Theme',
     icon: (
-      <SunMoon className='h-full w-full text-neutral-600 dark:text-neutral-300' />
+      <SunMoon className='h-full w-full text-neutral-300' />
     ),
     href: '#',
   },
@@ -65,12 +65,12 @@ const data = [
 
 export function AppleStyleDock() {
   return (
-    <div className='relative max-w-full'>
-      <Dock className='items-end pb-3'>
+    <div className='relative flex justify-center max-w-full overflow-visible'>
+      <Dock className='items-end pb-3 bg-neutral-900/90 border border-neutral-800' panelHeight={60} magnification={76} distance={140}>
         {data.map((item, idx) => (
           <DockItem
             key={idx}
-            className='aspect-square rounded-full bg-gray-200 dark:bg-neutral-800'
+            className='aspect-square rounded-full bg-neutral-800/90 border border-white/5 hover:bg-neutral-700/80 transition-colors'
           >
             <DockLabel>{item.title}</DockLabel>
             <DockIcon>{item.icon}</DockIcon>
