@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="crossGrad" x1="120" y1="120" x2="392" y2="392" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0284C7" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <!-- Rounded App Icon Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <!-- Border Sheen -->
+  <rect x="2" y="2" width="508" height="508" rx="110" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4" />
+  
+  <!-- Medical Plus / Cross -->
+  <g filter="url(#glow)">
+    <rect x="220" y="116" width="72" height="280" rx="20" fill="url(#crossGrad)" />
+    <rect x="116" y="220" width="280" height="72" rx="20" fill="url(#crossGrad)" />
+  </g>
+
+  <!-- Pulse / Radar Wave Line -->
+  <path d="M120 256 H180 L210 200 L245 320 L275 220 L300 280 L320 256 H392" 
+        stroke="#0284C7" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Center Heartbeat / Sync Dot -->
+  <circle cx="256" cy="256" r="10" fill="#38BDF8" />
+</svg>

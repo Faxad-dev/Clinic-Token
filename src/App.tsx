@@ -48,7 +48,6 @@ export default function App() {
   );
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
   const [cinematicTheme, setCinematicTheme] = useState<'hospital' | 'sobers'>('hospital');
-  const [patientHeroMode, setPatientHeroMode] = useState<'3d' | 'classic'>('3d');
   
   // Track patient's current token in session
   const [userActiveToken, setUserActiveToken] = useState<PatientToken | null>(() => {
@@ -116,81 +115,26 @@ export default function App() {
       <main className="flex-1 pb-16 md:pb-0">
         {activePanel === 'patient' && (
           <div className="animate-fadeIn">
-            {/* Experience Switcher Strip */}
-            <div className="bg-slate-900 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs text-white">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                </span>
-                <span className="font-semibold text-slate-200">Featured Experience:</span>
-                <span className="text-slate-400 hidden sm:inline">Interactive 3D Hardware Hero &amp; Cinematic Telemetry Timeline</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="inline-flex rounded-lg bg-slate-800 p-1 border border-slate-700 text-xs">
-                  <button
-                    onClick={() => setPatientHeroMode('3d')}
-                    className={`px-3 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      patientHeroMode === '3d'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-                    <span>3D Animation Hero</span>
-                  </button>
-                  <button
-                    onClick={() => setPatientHeroMode('classic')}
-                    className={`px-3 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      patientHeroMode === 'classic'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <span>Classic Search View</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Render 3D Cinematic Hero if '3d' or Classic Hero if 'classic' */}
-            {patientHeroMode === '3d' ? (
-              <div className="border-b border-slate-800 shadow-xl">
-                <CinematicHero
-                  brandName="Aura Nexus"
-                  tagline1="Track your care,"
-                  tagline2="zero waiting room stress."
-                  cardHeading="OPD Queue, redefined."
-                  cardDescription={
-                    <>
-                      <span className="text-white font-semibold">Aura Nexus Med•OS</span> synchronizes patient arrival, doctor chamber capacity, and token progression with predictive sub-second telemetry and zero lobby crowding.
-                    </>
-                  }
-                  metricValue={queueService.getHospitalStats().totalTokens || 128}
-                  metricLabel="Tokens Synced"
-                  ctaHeading="Experience seamless OPD."
-                  ctaDescription="Instant digital tokens, live radar wait times, and direct specialist physician access."
-                  onBookClick={handleScrollToDoctors}
-                  onTrackClick={() => setActivePanel('tracker')}
-                />
-              </div>
-            ) : (
-              <HeroSection
+            {/* 3D Cinematic Hero */}
+            <div className="border-b border-slate-800 shadow-xl">
+              <CinematicHero
+                brandName="Aura Nexus"
+                tagline1="Track your care,"
+                tagline2="zero waiting room stress."
+                cardHeading="OPD Queue, redefined."
+                cardDescription={
+                  <>
+                    <span className="text-white font-semibold">Aura Nexus Med•OS</span> synchronizes patient arrival, doctor chamber capacity, and token progression with predictive sub-second telemetry and zero lobby crowding.
+                  </>
+                }
+                metricValue={queueService.getHospitalStats().totalTokens || 128}
+                metricLabel="Tokens Synced"
+                ctaHeading="Experience seamless OPD."
+                ctaDescription="Instant digital tokens, live radar wait times, and direct specialist physician access."
                 onBookClick={handleScrollToDoctors}
                 onTrackClick={() => setActivePanel('tracker')}
-                onCinematicClick={() => {
-                  setPatientHeroMode('3d');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                onBookDoctor={(doc) => setBookingDoctor(doc)}
-                onSelectDepartment={(id) => {
-                  setSelectedDepartment(id);
-                  handleScrollToDoctors();
-                }}
               />
-            )}
+            </div>
 
             {/* Diseases / Departments Explorer */}
             <DepartmentsSection

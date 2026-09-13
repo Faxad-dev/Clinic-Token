@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { ActivePanel, PatientToken, Doctor } from '../types';
 import { AdminUser } from '../services/adminAuthStore';
 import { 
@@ -14,9 +15,13 @@ import {
   UserCheck,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Smartphone,
+  Download
 } from 'lucide-react';
 import { queueService } from '../services/queueStore';
+import { PWAInstallModal } from './pwa/PWAInstallModal';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 
 interface NavbarProps {
   activePanel: ActivePanel;
@@ -40,6 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAdminLogin,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isPWAOpen, setIsPWAOpen] = useState(false);
+  const { isInstalled } = usePWAInstall();
 
   const handleReset = () => {
     if (window.confirm('Reset queue state to default sample data for live demonstration?')) {
@@ -144,47 +151,82 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop & Tablet Navigation Bar (md+) */}
-          <nav className="hidden md:flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200/80 shadow-inner overflow-x-auto max-w-full">
-            <button
+          <motion.nav 
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="hidden md:flex items-center p-1 rounded-xl bg-slate-100/90 backdrop-blur-sm border border-slate-200/80 shadow-inner overflow-x-auto max-w-full relative"
+          >
+            <motion.button
               id="nav-tab-patient"
               onClick={() => handleTabClick('patient')}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors z-10 ${
                 activePanel === 'patient'
-                  ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'text-blue-700 font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
+              {activePanel === 'patient' && (
+                <motion.div
+                  layoutId="navbar-active-tab-indicator"
+                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/90 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                />
+              )}
               <UserRound className="w-3.5 h-3.5 text-blue-600" />
               <span className="hidden lg:inline">Patient Portal</span>
               <span className="lg:hidden">Patient</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               id="nav-tab-tracker"
               onClick={() => handleTabClick('tracker')}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap relative cursor-pointer ${
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors z-10 ${
                 activePanel === 'tracker'
-                  ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'text-blue-700 font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
+              {activePanel === 'tracker' && (
+                <motion.div
+                  layoutId="navbar-active-tab-indicator"
+                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/90 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                />
+              )}
               <Tv2 className="w-3.5 h-3.5 text-emerald-600" />
               <span className="hidden lg:inline">Live Token Tracker</span>
               <span className="lg:hidden">Radar</span>
               {activeToken && (
                 <span className="w-2 h-2 rounded-full bg-blue-600 absolute -top-0.5 -right-0.5 animate-ping"></span>
               )}
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               id="nav-tab-doctor"
               onClick={() => handleTabClick('doctor')}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors z-10 ${
                 activePanel === 'doctor'
-                  ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'text-blue-700 font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
+              {activePanel === 'doctor' && (
+                <motion.div
+                  layoutId="navbar-active-tab-indicator"
+                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/90 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                />
+              )}
               {authenticatedDoctor ? (
                 <>
                   <Stethoscope className="w-3.5 h-3.5 text-blue-600" />
@@ -202,17 +244,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 </>
               )}
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               id="nav-tab-admin"
               onClick={() => handleTabClick('admin')}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors z-10 ${
                 activePanel === 'admin'
-                  ? 'bg-white text-blue-700 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'text-blue-700 font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
+              {activePanel === 'admin' && (
+                <motion.div
+                  layoutId="navbar-active-tab-indicator"
+                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/90 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                />
+              )}
               {authenticatedAdmin ? (
                 <>
                   <ShieldCheck className="w-3.5 h-3.5 text-slate-900" />
@@ -230,25 +282,46 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 </>
               )}
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               id="nav-tab-cinematic"
               onClick={() => handleTabClick('cinematic')}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors z-10 ${
                 activePanel === 'cinematic'
-                  ? 'bg-blue-600 text-white shadow-sm border border-blue-600'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'text-white font-bold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
+              {activePanel === 'cinematic' && (
+                <motion.div
+                  layoutId="navbar-active-tab-indicator"
+                  className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg shadow-sm border border-blue-500 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                />
+              )}
               <Sparkles className={`w-3.5 h-3.5 ${activePanel === 'cinematic' ? 'text-cyan-200' : 'text-blue-600'}`} />
               <span>3D Animation</span>
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping"></span>
-            </button>
-          </nav>
+            </motion.button>
+          </motion.nav>
 
           {/* Desktop Live Simulator and 3D Cinematic quick toggles */}
           <div className="hidden lg:flex items-center gap-2">
+            <button
+              id="btn-nav-install-pwa"
+              onClick={() => setIsPWAOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-50/90 hover:bg-cyan-100 text-cyan-950 text-xs font-bold transition-all cursor-pointer shadow-sm hover:shadow"
+              title="Install Aura Nexus as a Mobile or Desktop App"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-cyan-600" />
+              <span>{isInstalled ? "App Active" : "Install App"}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+            </button>
+
             <button
               id="btn-cinematic-mode"
               onClick={() => handleTabClick('cinematic')}
@@ -455,6 +528,31 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
             </button>
+
+            {/* Mobile App PWA Install Link */}
+            <button
+              onClick={() => {
+                setIsPWAOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-gradient-to-r from-slate-900 to-blue-950 text-white border border-cyan-500/40 shadow-md cursor-pointer transition-all hover:border-cyan-400"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-300">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold flex items-center gap-1.5">
+                    <span>Install Mobile App</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 font-bold">
+                      PWA
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-slate-300 font-normal">Add directly to phone home screen</div>
+                </div>
+              </div>
+              <Download className="w-4 h-4 text-cyan-300" />
+            </button>
           </div>
         )}
       </header>
@@ -530,6 +628,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="text-[10px] tracking-tight">Demo</span>
         </button>
       </nav>
+
+      <PWAInstallModal
+        isOpen={isPWAOpen}
+        onClose={() => setIsPWAOpen(false)}
+      />
     </>
   );
 };

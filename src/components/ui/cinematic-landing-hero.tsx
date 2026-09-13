@@ -13,8 +13,13 @@ import {
   ShieldCheck,
   Zap,
   Play,
-  Pause
+  Pause,
+  Download,
+  QrCode,
+  Check
 } from "lucide-react";
+import { usePWAInstall } from "../../hooks/usePWAInstall";
+import { PWAInstallModal } from "../pwa/PWAInstallModal";
 
 const INJECTED_STYLES = `
   /* Environment Overlays */
@@ -143,6 +148,7 @@ export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement>
   ctaDescription?: string;
   onBookClick?: () => void;
   onTrackClick?: () => void;
+  onInstallClick?: () => void;
 }
 
 export function CinematicHero({ 
@@ -161,6 +167,7 @@ export function CinematicHero({
   ctaDescription = "Instant digital tokens, live radar wait times, and direct specialist physician access.",
   onBookClick,
   onTrackClick,
+  onInstallClick,
   className, 
   ...props 
 }: CinematicHeroProps) {
@@ -173,6 +180,15 @@ export function CinematicHero({
   const requestRef = useRef<number>(0);
 
   const [isPlayingRing, setIsPlayingRing] = useState<boolean>(true);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
+  const { isInstalled, isInstallable, install } = usePWAInstall();
+
+  const handleOpenInstall = () => {
+    if (onInstallClick) {
+      onInstallClick();
+    }
+    setIsInstallModalOpen(true);
+  };
 
   // 1. High-Performance Real-Time 3D Mouse/Cursor Tilt
   useEffect(() => {
@@ -606,25 +622,77 @@ export function CinematicHero({
                 {ctaDescription}
               </p>
 
-              {/* Mobile App Download Badges */}
-              <div className="pt-2 flex flex-row gap-2.5">
-                <div className="px-3.5 py-2 rounded-xl bg-white/10 border border-white/15 text-left flex items-center gap-2 shadow-sm">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 384 512" aria-hidden="true">
-                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-                  </svg>
-                  <div>
-                    <div className="text-[8px] uppercase tracking-wider text-slate-400 font-semibold">iOS</div>
-                    <div className="text-[11px] font-bold text-white">App Store</div>
-                  </div>
-                </div>
+              {/* Mobile App Installation Box (Replaces non-existent App Store / Play Store badges) */}
+              <div 
+                id="hero-mobile-app-install"
+                className="pt-2 w-full max-w-sm flex flex-col items-center lg:items-end gap-2.5"
+              >
+                <div className="w-full p-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-900/95 border border-cyan-400/30 backdrop-blur-md transition-all shadow-xl shadow-cyan-950/40">
+                  <div className="flex items-center justify-between gap-2 mb-2.5 pb-2 border-b border-slate-800 text-left">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-md shadow-cyan-500/30 flex items-center justify-center shrink-0">
+                        <Smartphone className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <span>Mobile App</span>
+                          <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
+                            PWA
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400">Direct install to your home screen</div>
+                      </div>
+                    </div>
 
-                <div className="px-3.5 py-2 rounded-xl bg-white/10 border border-white/15 text-left flex items-center gap-2 shadow-sm">
-                  <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 512 512" aria-hidden="true">
-                    <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/>
-                  </svg>
-                  <div>
-                    <div className="text-[8px] uppercase tracking-wider text-slate-400 font-semibold">Android</div>
-                    <div className="text-[11px] font-bold text-white">Google Play</div>
+                    {isInstalled ? (
+                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-400/30">
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span>Installed</span>
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-semibold border border-blue-400/30">
+                        Free • Direct
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      id="btn-install-mobile-app-hero"
+                      onClick={handleOpenInstall}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer group active:scale-[0.98]"
+                    >
+                      {isInstalled ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 text-white" />
+                          <span>App Ready on Device</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+                          <span>Install Mobile App</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      id="btn-qr-mobile-app-hero"
+                      onClick={handleOpenInstall}
+                      className="p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm"
+                      title="Scan QR code to install on your mobile phone"
+                    >
+                      <QrCode className="w-4 h-4 text-cyan-300" />
+                    </button>
+                  </div>
+
+                  {/* Value Badges */}
+                  <div className="mt-2.5 pt-2 border-t border-slate-800/60 flex items-center justify-between text-[9px] text-slate-400 font-medium px-1">
+                    <span className="text-cyan-300/90">iOS &amp; Android Ready</span>
+                    <span>•</span>
+                    <span>No App Store Needed</span>
+                    <span>•</span>
+                    <span>Zero Wait Telemetry</span>
                   </div>
                 </div>
               </div>
@@ -632,7 +700,7 @@ export function CinematicHero({
               {/* Replay 3D Intro Button */}
               <button
                 onClick={handleReplay}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer pt-2"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer pt-1"
                 title="Replay 3D Entrance Sequence"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -643,6 +711,12 @@ export function CinematicHero({
           </div>
         </div>
       </div>
+
+      {/* Mobile App Install Modal */}
+      <PWAInstallModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+      />
 
     </div>
   );
