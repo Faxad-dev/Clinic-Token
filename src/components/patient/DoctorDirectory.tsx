@@ -12,10 +12,14 @@ import {
   Stethoscope,
   Sparkles,
   RotateCcw,
-  HelpCircle,
-  SearchX
+  Search,
+  ArrowRight,
+  ShieldCheck,
+  Zap,
+  UserCheck
 } from 'lucide-react';
 import { queueService } from '../../services/queueStore';
+import { MobileSlider } from '../ui/MobileSlider';
 
 interface DoctorDirectoryProps {
   doctors: Doctor[];
@@ -33,8 +37,7 @@ const COMMON_SUGGESTIONS = [
   { label: 'Migraine / Headache', query: 'Migraine' },
   { label: 'Joint / Bone Pain', query: 'Joint' },
   { label: 'Skin / Eczema', query: 'Eczema' },
-  { label: 'Fever & Flu', query: 'Fever' },
-  { label: 'Child Health', query: 'Pediatrics' },
+  { label: 'Child Fever', query: 'Pediatrics' },
   { label: 'Dr. Tariq Mansoor', query: 'Tariq' },
   { label: 'Dr. Ayesha Khan', query: 'Ayesha' },
 ];
@@ -52,49 +55,49 @@ export const DoctorDirectory: React.FC<DoctorDirectoryProps> = ({
   // Filter logic
   const filteredDoctors = doctors.filter((doc) => {
     const deptMatch = selectedDepartment === 'all' || doc.departmentId === selectedDepartment;
-    
     if (!deptMatch) return false;
     if (!searchQuery.trim()) return true;
 
     const q = searchQuery.toLowerCase();
     const nameMatch = doc.name.toLowerCase().includes(q);
     const specMatch = doc.specialization.toLowerCase().includes(q);
-    const dept = departments.find((d) => d.id === doc.departmentId);
-    const diseaseMatch = dept?.commonDiseases.some((d) => d.toLowerCase().includes(q));
+    const deptObj = departments.find((d) => d.id === doc.departmentId);
+    const deptNameMatch = deptObj?.name.toLowerCase().includes(q);
+    const diseaseMatch = deptObj?.commonDiseases.some((d) => d.toLowerCase().includes(q));
 
-    return nameMatch || specMatch || diseaseMatch;
+    return nameMatch || specMatch || deptNameMatch || diseaseMatch;
   });
 
-  const getDepartmentName = (id: DepartmentId) => {
-    return departments.find((d) => d.id === id)?.name || id;
+  const getDepartmentName = (deptId: DepartmentId) => {
+    return departments.find((d) => d.id === deptId)?.name || deptId;
   };
 
   const getAvailabilityBadge = (avail: Doctor['availability']) => {
     switch (avail) {
       case 'available':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Available in Clinic
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            In Chamber · Ready
           </span>
         );
       case 'in_surgery':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-            <AlertCircle className="w-3 h-3 text-rose-600" />
-            In Emergency Surgery
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+            Emergency Surgery
           </span>
         );
       case 'on_break':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            <Clock className="w-3 h-3 text-amber-600" />
-            On Short Break
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            Short Break
           </span>
         );
       case 'on_leave':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
             On Leave Today
           </span>
         );
@@ -102,251 +105,251 @@ export const DoctorDirectory: React.FC<DoctorDirectoryProps> = ({
   };
 
   return (
-    <section id="doctors-section" className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <section 
+      id="doctors-section" 
+      className="py-16 sm:py-20 bg-slate-950 text-white border-b border-slate-800 scroll-mt-20 relative overflow-hidden"
+    >
+      {/* Background glow */}
+      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header & Search Area */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 pb-8 border-b border-slate-800/80">
           <div>
-            <div className="text-xs uppercase font-mono tracking-widest text-blue-700 font-bold mb-1">
-              OPD Specialist Roster
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-cyan-300 text-xs font-mono font-bold tracking-wider uppercase mb-3">
+              <Stethoscope className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Specialist Physician Roster</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Consultants & Real-Time Queue Capacity
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Consultants &amp; Real-Time Chamber Capacity
             </h2>
+            <p className="text-slate-400 text-sm mt-2 max-w-xl">
+              Real-time telemetry reflects live doctor presence, chamber room numbers, remaining token allocations, and active queue progression.
+            </p>
           </div>
-          <div className="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
-            Showing <strong className="text-blue-700">{filteredDoctors.length}</strong> available specialists
+
+          {/* Search Bar & Stats */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+            <div className="relative min-w-[280px]">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSetSearchQuery && onSetSearchQuery(e.target.value)}
+                placeholder="Search physician, specialty, symptom..."
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-white placeholder-slate-500 text-base sm:text-sm font-medium focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all shadow-inner"
+              />
+              {searchQuery && (
+                <button
+                  onClick={onClearSearch}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer text-xs"
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="text-xs font-mono text-cyan-300 bg-blue-950/80 px-3.5 py-2.5 rounded-xl border border-blue-800/60 font-semibold shrink-0 text-center">
+              <span>{filteredDoctors.length} Specialists Online</span>
+            </div>
           </div>
         </div>
 
+        {/* Quick Symptom Search Pills */}
+        <div className="flex flex-wrap items-center gap-2 mb-10">
+          <span className="text-xs font-mono text-slate-400 font-semibold mr-1 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Fast Filter:</span>
+          </span>
+          {COMMON_SUGGESTIONS.map((item) => (
+            <button
+              key={item.label}
+              onClick={() => {
+                if (onSetSearchQuery) onSetSearchQuery(item.query);
+                if (onSelectDepartment) onSelectDepartment('all');
+              }}
+              className={`text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-medium ${
+                searchQuery.toLowerCase() === item.query.toLowerCase()
+                  ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/30'
+                  : 'bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white border-slate-800 hover:border-slate-700'
+              }`}
+            >
+              + {item.label}
+            </button>
+          ))}
+          {searchQuery && (
+            <button
+              onClick={onClearSearch}
+              className="text-xs px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 transition-all cursor-pointer font-semibold flex items-center gap-1 ml-auto"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset Filters</span>
+            </button>
+          )}
+        </div>
+
+        {/* Empty State */}
         {filteredDoctors.length === 0 ? (
-          <div className="p-8 sm:p-12 text-center rounded-2xl bg-white border border-rose-200 text-slate-700 space-y-6 max-w-3xl mx-auto shadow-sm">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-xs font-mono font-bold tracking-wider uppercase">
-              <AlertCircle className="w-4 h-4 text-rose-600" />
-              <span>DATA NOT FOUND • 0 CLINICAL RECORDS</span>
+          <div className="p-10 sm:p-14 text-center rounded-3xl bg-slate-900 border border-slate-800 text-slate-300 space-y-6 max-w-2xl mx-auto shadow-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-mono font-bold tracking-wider uppercase">
+              <AlertCircle className="w-4 h-4 text-rose-400" />
+              <span>No Matching Specialist Found</span>
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {searchQuery ? (
-                  <span>
-                    No Specialists Found Matching "<span className="text-rose-600 underline underline-offset-4">{searchQuery}</span>"
-                  </span>
-                ) : (
-                  <span>No Specialists Available for Selected Department</span>
-                )}
+              <h3 className="text-2xl font-bold text-white tracking-tight">
+                No Physicians Found for "{searchQuery}"
               </h3>
-              <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-                The search condition or specialist name does not match any current OPD registry data. We support major clinical wings including Cardiology, Neurology, Orthopedics, Pediatrics, Dermatology, and General Medicine.
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Try searching for supported terms such as "Chest pain", "Migraine", "Joint", "Fever", or reset the department filter to view all physicians.
               </p>
             </div>
 
-            {/* Helpful clickable symptom suggestions */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-900">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>Try searching for these common supported symptoms:</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {COMMON_SUGGESTIONS.map((item) => (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={() => {
-                      if (onSetSearchQuery) onSetSearchQuery(item.query);
-                      if (onSelectDepartment) onSelectDepartment('all');
-                    }}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-white hover:bg-blue-50 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-slate-700 transition-all flex items-center gap-1 cursor-pointer font-medium"
-                  >
-                    <span>+</span>
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              {onClearSearch && searchQuery && (
+            <div className="flex items-center justify-center gap-3 pt-2">
+              {onClearSearch && (
                 <button
-                  type="button"
                   onClick={onClearSearch}
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
                 >
-                  <RotateCcw className="w-3.5 h-3.5 text-white" />
-                  <span>Clear Search Query</span>
-                </button>
-              )}
-              {onSelectDepartment && selectedDepartment !== 'all' && (
-                <button
-                  type="button"
-                  onClick={() => onSelectDepartment('all')}
-                  className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-sm"
-                >
-                  <span>Show All 6 Departments</span>
+                  Clear Search &amp; Show All
                 </button>
               )}
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDoctors.map((doc) => {
-              const queue = queueService.getDoctorQueue(doc.id);
+          /* Doctors Grid with High Contrast & Mobile Slider */
+          <MobileSlider desktopGridClassName="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {filteredDoctors.map((doc, index) => {
               const totalCapacity = doc.schedules.reduce((sum, s) => sum + s.maxCapacity, 0);
               const totalIssued = doc.schedules.reduce((sum, s) => sum + s.tokensIssued, 0);
               const remainingSlots = Math.max(0, totalCapacity - totalIssued);
+              const capacityPercent = Math.min(100, Math.round((totalIssued / Math.max(1, totalCapacity)) * 100));
 
               return (
                 <div
                   key={doc.id}
                   id={`doctor-card-${doc.id}`}
-                  className="rounded-2xl bg-white border border-slate-200 hover:border-blue-300 transition-all duration-300 flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-md"
+                  className="rounded-3xl bg-slate-900 border border-slate-800 hover:border-cyan-400/60 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg hover:shadow-[0_16px_40px_rgba(6,182,212,0.18)] hover:-translate-y-2 group"
                 >
-                  <div>
-                    {/* Doctor Header & Avatar */}
-                    <div className="p-5 pb-4">
-                      <div className="flex items-start gap-4">
-                        <div className="relative">
-                          <img
-                            src={doc.photoUrl}
-                            alt={doc.name}
-                            referrerPolicy="no-referrer"
-                            className="w-20 h-20 rounded-2xl object-cover border border-slate-200 group-hover:border-blue-400 transition-colors shadow-sm"
-                          />
-                          <span className="absolute -bottom-1 -right-1 bg-white p-0.5 rounded-full shadow-sm">
-                            <span className={`block w-3.5 h-3.5 rounded-full ${doc.availability === 'available' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                  <div className="p-6">
+                    {/* Top Row: Photo + Information */}
+                    <div className="flex items-start gap-4">
+                      <div className="relative shrink-0">
+                        <img
+                          src={doc.photoUrl}
+                          alt={doc.name}
+                          referrerPolicy="no-referrer"
+                          className="w-20 h-20 rounded-2xl object-cover border-2 border-slate-700 group-hover:border-cyan-400 transition-colors shadow-md"
+                        />
+                        {doc.availability === 'available' ? (
+                          <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-900"></span>
                           </span>
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 text-xs text-blue-700 font-semibold mb-0.5">
-                            <span>{getDepartmentName(doc.departmentId)}</span>
-                          </div>
-                          <h3 className="text-lg font-bold text-slate-900 truncate group-hover:text-blue-700 transition-colors">
-                            {doc.name}
-                          </h3>
-                          <p className="text-xs text-slate-600 truncate mt-0.5">
-                            {doc.specialization}
-                          </p>
-                          <div className="flex items-center gap-3 mt-2 text-xs">
-                            <span className="flex items-center gap-1 text-amber-500 font-semibold font-mono">
-                              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                              {doc.rating}
-                              <span className="text-slate-400 font-normal font-sans">({doc.reviewCount})</span>
-                            </span>
-                            <span className="text-slate-300">•</span>
-                            <span className="text-slate-600 font-mono">
-                              {doc.experienceYears}+ yrs exp
-                            </span>
-                          </div>
-                        </div>
+                        ) : (
+                          <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-500 border-2 border-slate-900" />
+                        )}
                       </div>
 
-                      {/* Chamber & Status badge row */}
-                      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-1.5 text-slate-700 font-mono font-medium">
-                          <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                          <span>{doc.chamberNumber}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-mono text-cyan-400 font-bold mb-0.5 tracking-tight truncate">
+                          {getDepartmentName(doc.departmentId)}
                         </div>
-                        <div>{getAvailabilityBadge(doc.availability)}</div>
+                        <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors truncate tracking-tight">
+                          {doc.name}
+                        </h3>
+                        <p className="text-xs text-slate-400 truncate mt-0.5">
+                          {doc.specialization}
+                        </p>
+
+                        <div className="flex items-center gap-3 mt-2 text-xs">
+                          <span className="flex items-center gap-1 text-amber-400 font-bold font-mono">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                            {doc.rating}
+                            <span className="text-slate-500 font-normal font-sans">({doc.reviewCount})</span>
+                          </span>
+                          <span className="text-slate-700">•</span>
+                          <span className="text-slate-400 font-mono text-[11px]">
+                            {doc.experienceYears}+ yrs exp
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Real-time Live Queue Telemetry Banner */}
-                    <div className="mx-5 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    {/* Chamber Room & Status Badge */}
+                    <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 text-slate-300 font-mono font-semibold">
+                        <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>{doc.chamberNumber}</span>
+                      </div>
                       <div>
-                        <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500 font-semibold">
-                          Serving Now
-                        </div>
-                        <div className="text-base font-bold font-mono text-blue-700 flex items-center gap-1.5">
-                          <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-                          </span>
-                          {queue.activeToken ? queue.activeToken.tokenDisplay : `TK-${String(queue.currentServingNumber).padStart(3, '0')}`}
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500 font-semibold">
-                          In Waiting
-                        </div>
-                        <div className="text-sm font-semibold font-mono text-slate-800">
-                          {queue.waitingCount} patients
-                        </div>
-                      </div>
-
-                      <div className="text-right border-l border-slate-200 pl-3">
-                        <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500 font-semibold">
-                          Avg Consult
-                        </div>
-                        <div className="text-sm font-semibold font-mono text-slate-800">
-                          ~{doc.avgConsultationMinutes}m
-                        </div>
+                        {getAvailabilityBadge(doc.availability)}
                       </div>
                     </div>
 
-                    {/* Available Shift Slots */}
-                    <div className="px-5 py-3 space-y-2">
-                      <div className="text-[11px] uppercase font-mono text-slate-500 font-semibold">
-                        Today's OPD Slots & Remaining Capacity:
+                    {/* Live Chamber Capacity Progress Bar */}
+                    <div className="mt-4 p-3 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+                      <div className="flex items-center justify-between text-[11px] font-mono">
+                        <span className="text-slate-400">Tokens Issued</span>
+                        <span className="text-white font-bold">
+                          {totalIssued} / {totalCapacity}
+                        </span>
                       </div>
-                      <div className="space-y-1.5">
-                        {doc.schedules.map((slot) => {
-                          const slotRemaining = Math.max(0, slot.maxCapacity - slot.tokensIssued);
-                          const isFull = slotRemaining === 0;
 
-                          return (
-                            <div
-                              key={slot.id}
-                              className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className={`w-1.5 h-1.5 rounded-full ${slot.shift === 'morning' ? 'bg-amber-500' : 'bg-indigo-500'}`} />
-                                <span className="capitalize font-semibold text-slate-800">
-                                  {slot.shift} Shift
-                                </span>
-                                <span className="text-slate-500 text-[11px] font-mono">({slot.timeRange})</span>
-                              </div>
-                              <div className="text-[11px] font-mono">
-                                {isFull ? (
-                                  <span className="text-rose-600 font-semibold">Slot Full</span>
-                                ) : (
-                                  <span className="text-emerald-700 font-semibold">
-                                    {slotRemaining} tokens left
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
+                      {/* Progress meter */}
+                      <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            capacityPercent > 85 
+                              ? 'bg-rose-500' 
+                              : capacityPercent > 60 
+                              ? 'bg-amber-400' 
+                              : 'bg-gradient-to-r from-blue-500 to-cyan-400'
+                          }`}
+                          style={{ width: `${capacityPercent}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                        <span className="flex items-center gap-1 font-mono text-cyan-400">
+                          <Zap className="w-3 h-3" />
+                          <span>~{doc.avgConsultationMinutes} min/patient</span>
+                        </span>
+                        <span className="font-semibold text-emerald-400">
+                          {remainingSlots} slots remaining
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Card Bottom CTA & Fee */}
-                  <div className="p-5 pt-3 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] uppercase font-mono text-slate-500 block font-medium">Consultation Fee</span>
-                      <span className="text-base font-bold font-mono text-slate-900">
-                        PKR {doc.consultationFee.toLocaleString()}
-                      </span>
-                    </div>
+                  {/* Card Action Footer */}
+                  <div className="p-6 pt-0 mt-2">
+                    <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-3">
+                      <div className="text-left">
+                        <div className="text-[10px] uppercase font-mono text-slate-500">Consultation Fee</div>
+                        <div className="text-sm font-bold text-white font-mono">
+                          PKR {doc.consultationFee.toLocaleString()}
+                        </div>
+                      </div>
 
-                    <button
-                      id={`btn-book-${doc.id}`}
-                      disabled={doc.availability === 'on_leave'}
-                      onClick={() => onBookDoctor(doc)}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      <Ticket className="w-3.5 h-3.5 text-white" />
-                      <span>Book Token</span>
-                    </button>
+                      <button
+                        onClick={() => onBookDoctor(doc)}
+                        className="min-h-[44px] px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-600/20 hover:shadow-cyan-600/40 transition-all flex items-center justify-center gap-2 cursor-pointer group-hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        <Ticket className="w-3.5 h-3.5" />
+                        <span>Book Token</span>
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
             })}
-          </div>
+          </MobileSlider>
         )}
+
       </div>
     </section>
   );

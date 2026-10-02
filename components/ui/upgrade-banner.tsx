@@ -40,7 +40,7 @@ export function UpgradeBanner({
 }: UpgradeBannerProps) {
   const [isHovered, setIsHovered] = React.useState(false);
 
-  const iconVariants = {
+  const iconVariants: any = {
     hidden: { x: 0, y: 0, opacity: 0, rotate: 0 },
     visible: (custom: { x: number; y: number }) => ({
       x: custom.x,
@@ -88,7 +88,10 @@ export function UpgradeBanner({
           >
             <SettingsFilled className="text-[#005FF2] dark:text-[#006EFE]" />
           </motion.div>
-          <div className="relative flex h-[35px] items-center gap-1 rounded-[6px] border border-[#CBE7FF] bg-[#F0F7FF] pl-2.5 pr-1 text-sm dark:border-[#003674] dark:bg-[#06193A]">
+          <div 
+            style={{ width: '555px', maxWidth: '100%' }}
+            className="relative flex h-[35px] items-center gap-1 rounded-[6px] border border-[#CBE7FF] bg-[#F0F7FF] pl-2.5 pr-1 text-sm dark:border-[#003674] dark:bg-[#06193A]"
+          >
             <button
               className="focus-visible:shadow-focus-ring rounded-xs my-[-1px] cursor-pointer border-none bg-transparent px-0 py-1 font-sans text-[13px] font-medium text-[#002359] underline decoration-[#CAE7FF] underline-offset-[5px] outline-none hover:text-[#005FF2] hover:decoration-[#94CCFF] focus-visible:!shadow-[#008FFF] dark:text-[#EAF5FF] dark:decoration-[#003674] dark:hover:text-[#44A7FF] dark:hover:decoration-[#00408A]"
               onMouseEnter={() => setIsHovered(true)}

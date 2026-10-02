@@ -68,9 +68,9 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto overscroll-contain">
       <div 
-        className="relative w-full max-w-lg bg-[#0d1424] border border-cyan-500/30 rounded-3xl shadow-2xl shadow-cyan-950/60 overflow-hidden text-slate-100 p-6 sm:p-7"
+        className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto my-auto bg-[#0d1424] border border-cyan-500/30 rounded-3xl shadow-2xl shadow-cyan-950/60 text-slate-100 p-4 sm:p-7"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Subtle Ambient Background Gradient */}
@@ -80,7 +80,7 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
         {/* Header with Close */}
         <div className="relative flex items-start justify-between pb-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center overflow-hidden">
+            <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center overflow-hidden shrink-0">
               <img 
                 src="/icon.svg" 
                 alt="Aura Nexus Icon" 
@@ -91,42 +91,43 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
               />
               <Smartphone className="w-6 h-6 text-white absolute" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-white tracking-tight">Install Mobile App</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">Install Mobile App</h3>
                 <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
                   PWA
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Direct installation from this website to your phone</p>
+              <p className="text-xs text-slate-400 truncate">Direct installation from this website to your phone</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors shrink-0"
             title="Close"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Benefits Pill Strip */}
-        <div className="relative grid grid-cols-3 gap-2 my-4">
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2.5 text-center">
-            <Zap className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-            <div className="text-[11px] font-bold text-slate-200">Instant Access</div>
-            <div className="text-[9px] text-slate-400">No App Store Login</div>
+        <div className="relative grid grid-cols-3 gap-1.5 sm:gap-2.5 my-4">
+          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2 sm:p-2.5 text-center min-w-0">
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 mx-auto mb-1 shrink-0" />
+            <div className="text-[10px] sm:text-xs font-bold text-slate-200 truncate">Instant Access</div>
+            <div className="text-[8px] sm:text-[9px] text-slate-400 truncate">No App Store</div>
           </div>
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2.5 text-center">
-            <Smartphone className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
-            <div className="text-[11px] font-bold text-slate-200">Full Screen</div>
-            <div className="text-[9px] text-slate-400">Native Feel &amp; Icon</div>
+          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2 sm:p-2.5 text-center min-w-0">
+            <Smartphone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 mx-auto mb-1 shrink-0" />
+            <div className="text-[10px] sm:text-xs font-bold text-slate-200 truncate">Full Screen</div>
+            <div className="text-[8px] sm:text-[9px] text-slate-400 truncate">Native Feel</div>
           </div>
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2.5 text-center">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-            <div className="text-[11px] font-bold text-slate-200">Live Radar</div>
-            <div className="text-[9px] text-slate-400">Real-time OPD alerts</div>
+          <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-2 sm:p-2.5 text-center min-w-0">
+            <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 mx-auto mb-1 shrink-0" />
+            <div className="text-[10px] sm:text-xs font-bold text-slate-200 truncate">Live Radar</div>
+            <div className="text-[8px] sm:text-[9px] text-slate-400 truncate">Real-time alerts</div>
           </div>
         </div>
 
@@ -142,37 +143,37 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
         <div className="flex rounded-xl bg-slate-900/90 p-1 border border-slate-800 text-xs mb-4">
           <button
             onClick={() => setActiveTab('prompt')}
-            className={`flex-1 py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-h-[44px] py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'prompt' ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'
             }`}
           >
             <Download className="w-3.5 h-3.5" />
-            <span>1-Tap Install</span>
+            <span className="truncate">1-Tap</span>
           </button>
           <button
             onClick={() => setActiveTab('ios')}
-            className={`flex-1 py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-h-[44px] py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'ios' ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'
             }`}
           >
-            <span>iPhone / iOS</span>
+            <span className="truncate">iOS</span>
           </button>
           <button
             onClick={() => setActiveTab('android')}
-            className={`flex-1 py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-h-[44px] py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'android' ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'
             }`}
           >
-            <span>Android</span>
+            <span className="truncate">Android</span>
           </button>
           <button
             onClick={() => setActiveTab('qr')}
-            className={`flex-1 py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-h-[44px] py-1.5 px-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'qr' ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'
             }`}
           >
             <QrCode className="w-3.5 h-3.5" />
-            <span>Scan QR</span>
+            <span className="truncate">QR</span>
           </button>
         </div>
 
@@ -193,7 +194,7 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
               <button
                 onClick={handleNativeInstall}
                 disabled={installStatus === 'installing'}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                className="w-full min-h-[44px] py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
                 {installStatus === 'installing' ? (
                   <>
@@ -337,7 +338,7 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
         <div className="mt-4 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
           <button
             onClick={handleCopyLink}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="min-h-[44px] px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             {copied ? (
               <>
@@ -354,7 +355,7 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ isOpen, onClos
 
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/30 font-semibold transition-colors cursor-pointer"
+            className="min-h-[44px] px-5 py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/30 font-semibold transition-colors cursor-pointer flex items-center justify-center"
           >
             Got It
           </button>

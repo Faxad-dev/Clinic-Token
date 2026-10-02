@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { queueService } from '../../services/queueStore';
 import { Doctor, DepartmentId } from '../../types';
+import { MobileSlider } from '../ui/MobileSlider';
 
 interface HeroSectionProps {
   onBookClick: () => void;
@@ -119,9 +120,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   return (
-    <section className="relative overflow-visible pt-10 pb-12 sm:pt-16 sm:pb-16 border-b border-slate-200 bg-white/70">
+    <section className="relative overflow-x-hidden overflow-y-visible pt-10 pb-12 sm:pt-16 sm:pb-16 border-b border-slate-200 bg-white/70">
       {/* Swiss subtle ambient diffuse background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-[700px] h-[300px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-6">
@@ -134,7 +135,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-tight">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.15]">
             Precision Healthcare with{' '}
             <span className="text-blue-600 underline decoration-blue-400/40 decoration-wavy decoration-1 underline-offset-8">
               Live Token Tracking
@@ -205,9 +206,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Search condition (e.g. Chest pain, Migraine, Eczema) or Doctor name..."
-                className="w-full pl-11 pr-24 py-3.5 rounded-2xl bg-white border border-slate-300 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20 text-sm text-slate-900 placeholder-slate-400 transition-all shadow-sm"
+                className="w-full pl-11 pr-24 py-3.5 rounded-2xl bg-white border border-slate-300 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20 text-base sm:text-sm text-slate-900 placeholder-slate-400 transition-all shadow-sm"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {searchQuery && (
                   <button
                     type="button"
@@ -215,10 +216,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       setSearchQuery('');
                       setIsSearchFocused(true);
                     }}
-                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 text-xs transition-colors cursor-pointer"
+                    className="min-w-[44px] min-h-[44px] p-2 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 bg-slate-100/80 hover:bg-slate-200 transition-colors cursor-pointer"
                     title="Clear Search"
+                    aria-label="Clear Search"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 )}
                 <button
@@ -227,7 +229,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     setIsSearchFocused(false);
                     onBookClick();
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-mono font-semibold transition-all cursor-pointer"
+                  className="min-h-[44px] px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center"
                 >
                   Search
                 </button>
@@ -437,7 +439,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       </div>
 
       {/* Stats Bar */}
-      <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <MobileSlider className="mt-12" desktopGridClassName="grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.04)] relative overflow-hidden group hover:border-blue-300 hover:shadow-[0_8px_25px_rgba(15,23,42,0.08)] transition-all">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg bg-blue-50 border border-blue-100 text-blue-600">
@@ -508,7 +510,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span>{stats.onTimeRate} punctuality index</span>
           </div>
         </div>
-      </div>
+      </MobileSlider>
     </div>
   </section>
   );

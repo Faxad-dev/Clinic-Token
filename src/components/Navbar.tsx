@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ActivePanel, PatientToken, Doctor } from '../types';
 import { AdminUser } from '../services/adminAuthStore';
 import { 
@@ -8,28 +7,19 @@ import {
   Stethoscope, 
   ShieldCheck, 
   Tv2, 
-  RotateCcw,
   Sparkles,
   Layers,
-  Lock,
-  UserCheck,
   Menu,
   X,
   ChevronRight,
   Smartphone,
   Download,
-  HomeIcon,
-  Package,
-  Component,
-  Activity,
-  ScrollText,
-  SunMoon
+  Building2,
+  Users,
+  Radio
 } from 'lucide-react';
-import { queueService } from '../services/queueStore';
 import { PWAInstallModal } from './pwa/PWAInstallModal';
 import { usePWAInstall } from '../hooks/usePWAInstall';
-import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
-import { UpgradeBanner } from '@/components/ui/upgrade-banner';
 
 interface NavbarProps {
   activePanel: ActivePanel;
@@ -54,333 +44,246 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPWAOpen, setIsPWAOpen] = useState(false);
-  const [showUpgradeBanner, setShowUpgradeBanner] = useState(true);
   const { isInstalled } = usePWAInstall();
-
-  const handleReset = () => {
-    if (window.confirm('Reset queue state to default sample data for live demonstration?')) {
-      queueService.resetQueueForDemo();
-    }
-  };
 
   const handleTabClick = (panel: ActivePanel) => {
     setActivePanel(panel);
     setMobileMenuOpen(false);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    if (activePanel !== 'patient') {
+      setActivePanel('patient');
+    }
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+    setMobileMenuOpen(false);
+  };
+
   return (
     <>
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/95 border-b border-slate-800 shadow-[0_2px_15px_rgba(15,23,42,0.4)]">
-        {/* Top emergency & system status ticker */}
-        <div className="bg-slate-950/90 border-b border-slate-800/80 px-3 sm:px-6 py-1 text-xs flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 sm:gap-2 text-slate-300 font-mono min-w-0">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-            </span>
-            <span className="tracking-wider uppercase text-[10px] sm:text-[11px] font-bold text-slate-100 truncate">
-              <span className="sm:hidden">Live Queue Sync</span>
-              <span className="hidden sm:inline">Live Queue Telemetry Active</span>
-            </span>
-            <span className="text-slate-600 hidden md:inline">•</span>
-            <span className="text-slate-400 hidden md:inline">Zero-Lag Token Broadcast • Sub-second Sync</span>
-          </div>
-
-          {/* Upgrade Banner with animated gear icons and smooth enter */}
-          {showUpgradeBanner && (
-            <div className="hidden lg:flex items-center">
-              <UpgradeBanner
-                buttonText="Upgrade to Hospital Cloud Pro"
-                description="for multi-clinic token telemetry & sub-second sync"
-                onClose={() => setShowUpgradeBanner(false)}
-                onClick={() => {
-                  alert('Hospital Cloud Pro Upgrade: Unlimited Chambers, Custom Hospital Branding & Real-time SMS Gateway.');
-                }}
-              />
-            </div>
-          )}
-
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {authenticatedAdmin && (
-              <button
-                onClick={() => handleTabClick('admin')}
-                className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 transition-all text-[11px] font-mono font-semibold cursor-pointer shadow-sm"
-                title="Hospital Administrator Logged In"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span className="truncate max-w-[90px] sm:max-w-none">Admin: {authenticatedAdmin.username}</span>
-              </button>
-            )}
-
-            {authenticatedDoctor && (
-              <button
-                onClick={() => handleTabClick('doctor')}
-                className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-600/50 text-emerald-300 hover:bg-emerald-900/60 transition-all text-[11px] font-mono font-semibold cursor-pointer"
-                title="Attending Physician Logged In"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span className="truncate max-w-[90px] sm:max-w-none">{authenticatedDoctor.name}</span>
-                <span className="text-[10px] text-emerald-400 hidden sm:inline font-bold">({authenticatedDoctor.chamberNumber})</span>
-              </button>
-            )}
-
-            {activeToken && (
-              <button
-                onClick={() => {
-                  onOpenTracker();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-950/60 border border-blue-500/50 text-blue-300 hover:bg-blue-900/60 transition-all text-[11px] font-mono font-bold cursor-pointer animate-pulse"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                <span className="hidden xs:inline">Token:</span> <strong>{activeToken.tokenDisplay}</strong>
-              </button>
-            )}
-
-            <button
-              onClick={handleReset}
-              title="Reset queue state for fresh demo"
-              className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition-colors px-1.5 sm:px-2 py-0.5 rounded hover:bg-slate-800 cursor-pointer"
+      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-[#030712]/95 border-b border-blue-900/30 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+        {/* Main Navigation Row */}
+        <div className="w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            {/* Logo & Brand */}
+            <div 
+              onClick={() => handleTabClick('patient')}
+              className="flex items-center gap-3 cursor-pointer group shrink-0 select-none"
             >
-              <RotateCcw className="w-3 h-3 text-slate-400" />
-              <span className="hidden sm:inline font-medium">Reset</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Main navigation row */}
-        <div 
-          style={{ backgroundColor: 'var(--color-slate-900)' }}
-          className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4 bg-slate-900"
-        >
-          {/* Logo & Brand */}
-          <div 
-            onClick={() => handleTabClick('patient')}
-            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0"
-          >
-            <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20 group-hover:bg-blue-500 transition-all">
-              <HeartPulse className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:scale-105 transition-transform" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-extrabold text-base sm:text-lg tracking-tight text-white">
-                  AURA NEXUS
-                </span>
-                <span className="text-[9px] sm:text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-900/60 border border-blue-700/60 text-blue-300 tracking-wider font-bold">
-                  MED•OS
-                </span>
+              <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-cyan-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.4)] group-hover:scale-105 transition-all">
+                <HeartPulse className="w-5 h-5 text-white" />
               </div>
-              <p className="text-[10px] text-slate-400 hidden lg:block font-medium">
-                Hospital OPD Telemetry & Token Management
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    AURA NEXUS
+                  </span>
+                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-950 border border-blue-600/50 text-cyan-300 tracking-wider font-bold shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    MED•OS
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400 hidden xl:block font-medium">
+                  Hospital OPD Telemetry & Token Management
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Desktop & Tablet Navigation Bar (md+) with Apple-Style Dock */}
-          <motion.nav 
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="hidden md:flex items-center justify-center relative overflow-visible"
-          >
-            <Dock 
-              className="items-center bg-[#141518]/95 border border-white/10 shadow-2xl px-2 sm:px-2.5 py-1 gap-1.5 sm:gap-2 rounded-full backdrop-blur-xl"
-              panelHeight={50}
-              magnification={62}
-              distance={120}
-            >
-              {/* 1. Home / Patient OPD */}
-              <DockItem
+            {/* Desktop Navigation Links */}
+            <nav className="hidden md:flex items-center gap-1 bg-[#060c18]/90 border border-blue-900/40 rounded-2xl p-1.5 shadow-[inset_0_1px_4px_rgba(0,0,0,0.6)]">
+              <button
                 id="nav-tab-patient"
                 onClick={() => handleTabClick('patient')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer micro-spring ${
                   activePanel === 'patient'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40 border border-blue-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
+                    ? 'bg-blue-600 text-white shadow-[0_0_18px_rgba(59,130,246,0.45)]'
+                    : 'text-slate-300 hover:text-white hover:bg-blue-950/40'
                 }`}
-                aria-label="Patient OPD Portal"
               >
-                <DockLabel>Patient OPD</DockLabel>
-                <DockIcon>
-                  <HomeIcon className="w-5 h-5" />
-                </DockIcon>
-                {activePanel === 'patient' && (
-                  <span className="w-1 h-1 rounded-full bg-cyan-300 absolute bottom-1"></span>
-                )}
-              </DockItem>
+                <UserRound className="w-3.5 h-3.5" />
+                <span>Patient Portal</span>
+              </button>
 
-              {/* 2. Products / Medical Specialties */}
-              <DockItem
+              <button
                 id="nav-tab-departments"
-                onClick={() => {
-                  handleTabClick('patient');
-                  const el = document.getElementById('departments-section') || document.getElementById('doctors-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="aspect-square rounded-full flex items-center justify-center transition-all relative bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5"
-                aria-label="Medical Specialties Roster"
+                onClick={() => scrollToSection('departments-section')}
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-blue-950/40 transition-all cursor-pointer micro-spring"
               >
-                <DockLabel>Specialties</DockLabel>
-                <DockIcon>
-                  <Package className="w-5 h-5" />
-                </DockIcon>
-              </DockItem>
+                <Building2 className="w-3.5 h-3.5 text-blue-400" />
+                <span>Specialties</span>
+              </button>
 
-              {/* 3. Components / Doctor Console */}
-              <DockItem
-                id="nav-tab-doctor"
-                onClick={() => handleTabClick('doctor')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
-                  activePanel === 'doctor'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40 border border-blue-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
-                }`}
-                aria-label="Doctor Console"
+              <button
+                id="nav-tab-doctors"
+                onClick={() => scrollToSection('doctors-section')}
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-blue-950/40 transition-all cursor-pointer micro-spring"
               >
-                <DockLabel>{authenticatedDoctor ? `Dr. ${authenticatedDoctor.name}` : 'Doctor Console'}</DockLabel>
-                <DockIcon>
-                  <Component className="w-5 h-5" />
-                </DockIcon>
-                {authenticatedDoctor ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 absolute top-0.5 right-0.5 ring-2 ring-neutral-900" title="Active Doctor Session"></span>
-                ) : null}
-                {activePanel === 'doctor' && (
-                  <span className="w-1 h-1 rounded-full bg-cyan-300 absolute bottom-1"></span>
-                )}
-              </DockItem>
+                <Users className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Doctors</span>
+              </button>
 
-              {/* 4. Activity / Live Token Radar */}
-              <DockItem
+              <button
                 id="nav-tab-tracker"
                 onClick={() => handleTabClick('tracker')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer relative micro-spring ${
                   activePanel === 'tracker'
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/40 border border-emerald-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
+                    ? 'bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)]'
+                    : 'text-slate-300 hover:text-white hover:bg-blue-950/40'
                 }`}
-                aria-label="Live Token Radar"
               >
-                <DockLabel>Token Radar</DockLabel>
-                <DockIcon>
-                  <Activity className="w-5 h-5" />
-                </DockIcon>
+                <Tv2 className="w-3.5 h-3.5" />
+                <span>Live Radar</span>
                 {activeToken && (
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 absolute -top-0.5 -right-0.5 animate-ping"></span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                 )}
-                {activePanel === 'tracker' && (
-                  <span className="w-1 h-1 rounded-full bg-emerald-200 absolute bottom-1"></span>
-                )}
-              </DockItem>
+              </button>
 
-              {/* 5. Change Log / Admin Reception Desk */}
-              <DockItem
-                id="nav-tab-admin"
-                onClick={() => handleTabClick('admin')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
-                  activePanel === 'admin'
-                    ? 'bg-slate-700 text-white shadow-lg border border-slate-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
-                }`}
-                aria-label="Admin Reception Desk"
-              >
-                <DockLabel>{authenticatedAdmin ? `Admin: ${authenticatedAdmin.username}` : 'Admin Desk'}</DockLabel>
-                <DockIcon>
-                  <ScrollText className="w-5 h-5" />
-                </DockIcon>
-                {authenticatedAdmin ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 absolute top-0.5 right-0.5 ring-2 ring-neutral-900" title="Admin Active"></span>
-                ) : null}
-                {activePanel === 'admin' && (
-                  <span className="w-1 h-1 rounded-full bg-cyan-300 absolute bottom-1"></span>
-                )}
-              </DockItem>
-
-              {/* 6. 3D Cinematic Animation */}
-              <DockItem
-                id="nav-tab-cinematic"
-                onClick={() => handleTabClick('cinematic')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
-                  activePanel === 'cinematic'
-                    ? 'bg-gradient-to-tr from-blue-600 to-cyan-500 text-white shadow-lg border border-cyan-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
-                }`}
-                aria-label="3D Hardware Animation"
-              >
-                <DockLabel>3D Animation</DockLabel>
-                <DockIcon>
-                  <Sparkles className="w-5 h-5" />
-                </DockIcon>
-                {activePanel === 'cinematic' && (
-                  <span className="w-1 h-1 rounded-full bg-white absolute bottom-1"></span>
-                )}
-              </DockItem>
-
-              {/* 7. Live Simulator */}
-              <DockItem
+              <button
                 id="nav-tab-simulator"
                 onClick={() => handleTabClick('simulator')}
-                className={`aspect-square rounded-full flex items-center justify-center transition-all relative ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer micro-spring ${
                   activePanel === 'simulator'
-                    ? 'bg-indigo-600 text-white shadow-lg border border-indigo-400/50'
-                    : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700/90 hover:text-white border border-white/5'
+                    ? 'bg-indigo-600 text-white shadow-[0_0_18px_rgba(99,102,241,0.45)]'
+                    : 'text-slate-300 hover:text-white hover:bg-blue-950/40'
                 }`}
-                aria-label="Split Screen Live Simulator"
               >
-                <DockLabel>Simulator</DockLabel>
-                <DockIcon>
-                  <Layers className="w-5 h-5" />
-                </DockIcon>
-                {activePanel === 'simulator' && (
-                  <span className="w-1 h-1 rounded-full bg-cyan-300 absolute bottom-1"></span>
-                )}
-              </DockItem>
-            </Dock>
-          </motion.nav>
+                <Layers className="w-3.5 h-3.5" />
+                <span>Simulator</span>
+              </button>
+            </nav>
 
-          {/* Desktop Right Controls */}
-          <div className="hidden lg:flex items-center gap-2">
-            <button
-              id="btn-nav-install-pwa"
-              onClick={() => setIsPWAOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-200 text-xs font-bold transition-all cursor-pointer shadow-sm hover:shadow"
-              title="Install Aura Nexus as a Mobile or Desktop App"
-            >
-              <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{isInstalled ? "App Active" : "Install App"}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            </button>
-          </div>
+            {/* Desktop Right Action Portals (Doctor / Admin / PWA) */}
+            <div className="hidden lg:flex items-center gap-2 shrink-0">
+              <button
+                id="nav-btn-doctor-login"
+                onClick={() => {
+                  if (authenticatedDoctor) {
+                    handleTabClick('doctor');
+                  } else if (onOpenDoctorLogin) {
+                    onOpenDoctorLogin();
+                  } else {
+                    handleTabClick('doctor');
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer micro-spring ${
+                  activePanel === 'doctor'
+                    ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.4)]'
+                    : 'bg-[#080e1d] text-slate-200 border-blue-900/40 hover:bg-blue-950/60 hover:text-white hover:border-blue-700/60'
+                }`}
+              >
+                <Stethoscope className="w-3.5 h-3.5 text-blue-400" />
+                <span>{authenticatedDoctor ? 'Doctor Desk' : 'Doctor Portal'}</span>
+              </button>
 
-          {/* Mobile Right Controls: Hamburger Toggle */}
-          <div className="flex md:hidden items-center gap-1.5">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition-colors cursor-pointer"
-              aria-label="Toggle Navigation Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-slate-200" />}
-            </button>
+              <button
+                id="nav-btn-admin-login"
+                onClick={() => {
+                  if (authenticatedAdmin) {
+                    handleTabClick('admin');
+                  } else if (onOpenAdminLogin) {
+                    onOpenAdminLogin();
+                  } else {
+                    handleTabClick('admin');
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer micro-spring ${
+                  activePanel === 'admin'
+                    ? 'bg-cyan-700 text-white border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                    : 'bg-[#080e1d] text-slate-200 border-blue-900/40 hover:bg-blue-950/60 hover:text-white hover:border-blue-700/60'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{authenticatedAdmin ? 'Admin Desk' : 'Admin'}</span>
+              </button>
+
+              <button
+                id="btn-nav-install-pwa"
+                onClick={() => setIsPWAOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/40 bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-200 text-xs font-bold transition-all cursor-pointer micro-spring shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                title="Install Aura Nexus as Mobile or Desktop App"
+              >
+                <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden xl:inline">{isInstalled ? 'App Active' : 'Install App'}</span>
+                <span className="xl:hidden">PWA</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              </button>
+            </div>
+
+            {/* Mobile / Tablet Menu Button */}
+            <div className="flex md:hidden items-center gap-2">
+              {activeToken && (
+                <button
+                  onClick={() => handleTabClick('tracker')}
+                  className="min-h-[44px] px-3 py-2 rounded-xl bg-blue-600 text-white font-mono text-xs font-bold flex items-center justify-center"
+                >
+                  {activeToken.tokenDisplay}
+                </button>
+              )}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="min-w-[44px] min-h-[44px] p-2 flex items-center justify-center rounded-xl bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle navigation menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-slate-200" />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu Drawer */}
+        {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-2 shadow-xl animate-fadeIn">
+          <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 py-4 space-y-2 shadow-2xl animate-fadeIn text-slate-200">
             <button
               onClick={() => handleTabClick('patient')}
               className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activePanel === 'patient'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-blue-100 text-blue-600">
+                <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
                   <UserRound className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold text-slate-900">Patient OPD Portal</div>
-                  <div className="text-[10px] text-slate-500 font-normal">Search specialists, book slots, triage</div>
+                  <div className="font-bold text-white">Patient Portal</div>
+                  <div className="text-[11px] text-slate-400">Book specialists & live queue explorer</div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => scrollToSection('departments-section')}
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800 transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-white">Clinical Specialties</div>
+                  <div className="text-[11px] text-slate-400">Cardiology, Neurology, Pediatrics & more</div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => scrollToSection('doctors-section')}
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800 transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
+                  <Users className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-white">Doctors Directory</div>
+                  <div className="text-[11px] text-slate-400">Available consultants & live chamber slots</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -390,24 +293,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('tracker')}
               className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activePanel === 'tracker'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-700">
+                <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
                   <Tv2 className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold text-slate-900 flex items-center gap-2">
+                  <div className="font-bold text-white flex items-center gap-2">
                     <span>Live Token Radar</span>
                     {activeToken && (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-100 text-blue-700 font-bold">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-400/20 text-emerald-300 font-bold">
                         {activeToken.tokenDisplay}
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-normal">Live queue progression & audio chime</div>
+                  <div className="text-[11px] text-slate-400">Live position, estimated wait & audio chime</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -417,27 +320,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('doctor')}
               className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activePanel === 'doctor'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700">
+                <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
                   <Stethoscope className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <div className="font-bold text-white flex items-center gap-2">
                     <span>Doctor Chamber Console</span>
-                    {authenticatedDoctor ? (
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    ) : (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-100 text-blue-700">
-                        Sign In
-                      </span>
+                    {authenticatedDoctor && (
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-normal">
-                    {authenticatedDoctor ? `${authenticatedDoctor.name} • ${authenticatedDoctor.chamberNumber}` : 'Call next patient, write prescriptions'}
+                  <div className="text-[11px] text-slate-400">
+                    {authenticatedDoctor ? `${authenticatedDoctor.name} (${authenticatedDoctor.chamberNumber})` : 'Call next patient & triage'}
                   </div>
                 </div>
               </div>
@@ -448,28 +347,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('admin')}
               className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activePanel === 'admin'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-slate-700 text-white'
+                  : 'bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-slate-200 text-slate-800">
+                <div className="p-2 rounded-lg bg-slate-700 text-slate-300">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                    <span>Admin & Reception Desk</span>
-                    {authenticatedAdmin ? (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-900 text-white font-bold">
-                        Fahad (Active)
-                      </span>
-                    ) : (
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-200 text-slate-700">
-                        Fahad Sign In
+                  <div className="font-bold text-white flex items-center gap-2">
+                    <span>Admin Reception Desk</span>
+                    {authenticatedAdmin && (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-700 text-cyan-300 font-bold">
+                        Active
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-normal">Add doctors, credentials, walk-ins, stats</div>
+                  <div className="text-[11px] text-slate-400">Reception walk-ins, doctors roster & queue stats</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -477,19 +372,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabClick('simulator')}
-              className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                activePanel === 'simulator'
-                  ? 'bg-slate-900 text-white border border-slate-900'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
-              }`}
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800 transition-all cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700">
+                <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
                   <Layers className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold">Split Screen Live Simulator</div>
-                  <div className="text-[10px] text-slate-400 font-normal">Side-by-side doctor desk + patient mobile screen</div>
+                  <div className="font-bold text-white">Live Split-Screen Simulator</div>
+                  <div className="text-[11px] text-slate-400">Test doctor chamber + patient mobile live</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -497,44 +388,40 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabClick('cinematic')}
-              className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                activePanel === 'cinematic'
-                  ? 'bg-gradient-to-r from-blue-900 to-indigo-950 text-white border border-blue-900'
-                  : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
-              }`}
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-slate-800/80 text-slate-200 border border-slate-700/60 hover:bg-slate-800 transition-all cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-indigo-100 text-indigo-700">
+                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400">
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold">3D Cinematic Hardware Mockup</div>
-                  <div className="text-[10px] text-slate-400 font-normal">Scroll-driven 3D device tilt & timeline animation</div>
+                  <div className="font-bold text-white">3D Hardware Mockup Tour</div>
+                  <div className="text-[11px] text-slate-400">Interactive device tilt & timeline</div>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />
             </button>
 
-            {/* Mobile App PWA Install Link */}
+            {/* Install PWA Option in drawer */}
             <button
               onClick={() => {
                 setIsPWAOpen(true);
                 setMobileMenuOpen(false);
               }}
-              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-gradient-to-r from-slate-900 to-blue-950 text-white border border-cyan-500/40 shadow-md cursor-pointer transition-all hover:border-cyan-400"
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold bg-gradient-to-r from-blue-900/60 to-cyan-900/60 text-white border border-cyan-500/40 shadow-md cursor-pointer transition-all hover:border-cyan-400"
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-300">
+                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-300">
                   <Smartphone className="w-4 h-4" />
                 </div>
                 <div className="text-left">
                   <div className="font-bold flex items-center gap-1.5">
-                    <span>Install Mobile App</span>
+                    <span>Install Hospital Mobile App</span>
                     <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 font-bold">
                       PWA
                     </span>
                   </div>
-                  <div className="text-[10px] text-slate-300 font-normal">Add directly to phone home screen</div>
+                  <div className="text-[11px] text-slate-300">Add to home screen for offline token updates</div>
                 </div>
               </div>
               <Download className="w-4 h-4 text-cyan-300" />
@@ -543,75 +430,75 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </header>
 
-      {/* Mobile Sticky Bottom Navigation Bar (md:hidden) for 1-thumb thumb access */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      {/* Mobile Sticky Bottom Bar (Thumb Navigation on small phones) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800 px-2 sm:px-3 pt-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] flex items-center justify-around shadow-[0_-4px_25px_rgba(0,0,0,0.5)]">
         <button
           onClick={() => handleTabClick('patient')}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+          className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center py-1 px-2.5 sm:px-3 rounded-xl transition-all cursor-pointer ${
             activePanel === 'patient'
-              ? 'text-blue-600 font-bold'
-              : 'text-slate-500 hover:text-slate-900'
+              ? 'text-blue-400 font-bold'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <UserRound className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Patient</span>
+          <span className="text-[11px] tracking-tight">OPD</span>
         </button>
 
         <button
           onClick={() => handleTabClick('tracker')}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative cursor-pointer ${
+          className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center py-1 px-2.5 sm:px-3 rounded-xl transition-all relative cursor-pointer ${
             activePanel === 'tracker'
-              ? 'text-blue-600 font-bold'
-              : 'text-slate-500 hover:text-slate-900'
+              ? 'text-emerald-400 font-bold'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Tv2 className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Radar</span>
+          <span className="text-[11px] tracking-tight">Radar</span>
           {activeToken && (
-            <span className="w-2 h-2 rounded-full bg-blue-600 absolute top-1 right-2 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-2 animate-ping"></span>
           )}
         </button>
 
         <button
           onClick={() => handleTabClick('doctor')}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative cursor-pointer ${
+          className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center py-1 px-2.5 sm:px-3 rounded-xl transition-all relative cursor-pointer ${
             activePanel === 'doctor'
-              ? 'text-blue-600 font-bold'
-              : 'text-slate-500 hover:text-slate-900'
+              ? 'text-blue-400 font-bold'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Stethoscope className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Doctor</span>
+          <span className="text-[11px] tracking-tight">Doctor</span>
           {authenticatedDoctor && (
-            <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-1 right-2"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-2"></span>
           )}
         </button>
 
         <button
           onClick={() => handleTabClick('admin')}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative cursor-pointer ${
+          className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center py-1 px-2.5 sm:px-3 rounded-xl transition-all relative cursor-pointer ${
             activePanel === 'admin'
-              ? 'text-blue-600 font-bold'
-              : 'text-slate-500 hover:text-slate-900'
+              ? 'text-cyan-400 font-bold'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <ShieldCheck className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Admin</span>
+          <span className="text-[11px] tracking-tight">Admin</span>
           {authenticatedAdmin && (
-            <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-1 right-2"></span>
+            <span className="w-2 h-2 rounded-full bg-cyan-400 absolute top-1.5 right-2"></span>
           )}
         </button>
 
         <button
           onClick={() => handleTabClick('simulator')}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+          className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center py-1 px-2.5 sm:px-3 rounded-xl transition-all cursor-pointer ${
             activePanel === 'simulator'
-              ? 'text-blue-600 font-bold'
-              : 'text-slate-500 hover:text-slate-900'
+              ? 'text-indigo-400 font-bold'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           <Layers className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Demo</span>
+          <span className="text-[11px] tracking-tight">Simulator</span>
         </button>
       </nav>
 

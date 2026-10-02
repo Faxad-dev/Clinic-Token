@@ -52,12 +52,13 @@ export const DoctorLoginPortal: React.FC<DoctorLoginPortalProps> = ({
   };
 
   const containerContent = (
-    <div className="w-full max-w-xl mx-auto rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+    <div className="w-full max-w-xl mx-auto rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xl relative max-h-[90dvh] overflow-y-auto my-auto">
       {/* Modal Close Button if in modal mode */}
       {isModal && onCancel && (
         <button
           onClick={onCancel}
-          className="absolute top-6 right-6 p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors z-20 cursor-pointer"
+          className="absolute top-4 right-4 min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors z-20 cursor-pointer"
+          aria-label="Close doctor sign in"
         >
           <X className="w-4 h-4" />
         </button>
@@ -104,7 +105,7 @@ export const DoctorLoginPortal: React.FC<DoctorLoginPortalProps> = ({
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder="e.g. DOC-101, Dr. Tariq, or staff email"
               required
-              className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 outline-none font-mono shadow-sm"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 outline-none font-mono shadow-sm"
             />
             <span className="absolute right-3.5 top-3.5 text-slate-400">
               <FileCheck className="w-4 h-4" />
@@ -127,12 +128,13 @@ export const DoctorLoginPortal: React.FC<DoctorLoginPortalProps> = ({
               placeholder="Enter password or 4-digit PIN"
               maxLength={40}
               required
-              className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 outline-none font-mono tracking-wider shadow-sm"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 outline-none font-mono tracking-wider shadow-sm"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+              className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -187,14 +189,14 @@ export const DoctorLoginPortal: React.FC<DoctorLoginPortalProps> = ({
 
   if (isModal) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain">
         {containerContent}
       </div>
     );
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 flex items-center justify-center min-h-[70vh]">
+    <div className="py-12 px-4 sm:px-6 flex items-center justify-center min-h-[70dvh]">
       {containerContent}
     </div>
   );

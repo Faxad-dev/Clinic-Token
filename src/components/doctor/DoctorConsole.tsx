@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Doctor, PatientToken, DoctorAvailability, HospitalQueueState } from '../../types';
 import { queueService } from '../../services/queueStore';
 import { soundEngine } from '../AudioChime';
+import { MobileSlider } from '../ui/MobileSlider';
 import { 
   Stethoscope, 
   Users, 
@@ -174,7 +175,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
               <select
                 value={selectedDoctorId}
                 onChange={(e) => setSelectedDoctorId(e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-600 shadow-sm"
+                className="px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-base sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-blue-600 shadow-sm"
               >
                 {queueState.doctors.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -189,7 +190,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200">
             <button
               onClick={() => handleAvailabilityChange('available')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 min-h-[36px] rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-center ${
                 doctor.availability === 'available'
                   ? 'bg-emerald-600 text-white font-semibold shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -199,7 +200,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
             </button>
             <button
               onClick={() => handleAvailabilityChange('on_break')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 min-h-[36px] rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-center ${
                 doctor.availability === 'on_break'
                   ? 'bg-amber-500 text-white font-semibold shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -209,7 +210,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
             </button>
             <button
               onClick={() => handleAvailabilityChange('in_surgery')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 min-h-[36px] rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-center ${
                 doctor.availability === 'in_surgery'
                   ? 'bg-rose-600 text-white font-semibold shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -224,7 +225,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
             <button
               type="button"
               onClick={onLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition-all cursor-pointer shadow-sm"
               title="Lock Chamber & Sign Out"
             >
               <LogOut className="w-3.5 h-3.5 text-rose-600" />
@@ -234,10 +235,10 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
         </div>
       </div>
 
-      {/* Main Doctor Cockpit Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Doctor Cockpit Grid (2-column on md tablets and desktop) */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Left Column: Active Patient Consultation Chamber (Col 7) */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="md:col-span-7 space-y-6">
           {/* Active Call Next Primary Action Card */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
             {/* Header & Active Consultation Timer */}
@@ -315,7 +316,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
                     value={doctorNotesInput}
                     onChange={(e) => setDoctorNotesInput(e.target.value)}
                     placeholder="Enter diagnostic notes, vitals (BP, SpO2), prescribed medicines or follow-up instructions..."
-                    className="w-full p-3.5 rounded-2xl bg-white border border-slate-300 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 font-mono resize-none shadow-sm"
+                    className="w-full p-3.5 rounded-2xl bg-white border border-slate-300 text-base sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 font-mono resize-none shadow-sm"
                   />
                 </div>
 
@@ -324,7 +325,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
                   <button
                     id="btn-complete-consultation"
                     onClick={handleCompleteActive}
-                    className="py-3 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="min-h-[44px] py-3 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Conclude Consultation</span>
@@ -333,7 +334,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
                   <button
                     id="btn-skip-patient"
                     onClick={handleSkipActive}
-                    className="py-3 px-4 rounded-xl font-medium text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    className="min-h-[44px] py-3 px-4 rounded-xl font-medium text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                   >
                     <SkipForward className="w-4 h-4 text-slate-500" />
                     <span>Skip / No-Show</span>
@@ -360,7 +361,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
                 id="btn-doctor-call-next"
                 onClick={handleCallNext}
                 disabled={doctorQueue.waitingCount === 0}
-                className="w-full py-3.5 sm:py-4 px-3 rounded-2xl font-bold text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer group"
+                className="w-full min-h-[48px] py-3.5 sm:py-4 px-3 rounded-2xl font-bold text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer group"
               >
                 <Play className="w-4 sm:w-5 h-4 sm:h-5 fill-white text-white group-hover:scale-110 transition-transform shrink-0" />
                 <span className="truncate tracking-wide">
@@ -374,7 +375,10 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <MobileSlider
+            desktopGridClassName="grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+            cardWidthClassName="w-[42vw] max-w-[190px]"
+          >
             <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
               <div className="text-[10px] uppercase font-mono text-slate-500 font-semibold">Today's Patients</div>
               <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
@@ -393,11 +397,11 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
                 ~{doctor.avgConsultationMinutes}m
               </div>
             </div>
-          </div>
+          </MobileSlider>
         </div>
 
         {/* Right Column: Full Queue Roster (Waiting + Completed) (Col 5) */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="md:col-span-5 space-y-6">
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -410,7 +414,7 @@ export const DoctorConsole: React.FC<DoctorConsoleProps> = ({
             </div>
 
             {/* Waiting List */}
-            <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-1">
+            <div className="space-y-2.5 max-h-[60dvh] md:max-h-[480px] overflow-y-auto pr-1">
               {doctorQueue.waitingTokens.length === 0 ? (
                 <div className="p-8 text-center text-slate-400 text-xs">
                   All waiting patients have been attended to!

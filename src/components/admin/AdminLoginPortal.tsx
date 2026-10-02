@@ -55,19 +55,20 @@ export const AdminLoginPortal: React.FC<AdminLoginPortalProps> = ({
   };
 
   const content = (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto my-auto">
       {/* Glow Card */}
-      <div className="relative rounded-3xl bg-[#090d16] border border-cyan-500/30 p-6 sm:p-8 shadow-[0_0_50px_rgba(6,182,212,0.15)] backdrop-blur-xl overflow-hidden">
+      <div className="relative rounded-3xl bg-[#090d16] border border-cyan-500/30 p-6 sm:p-8 shadow-[0_0_50px_rgba(6,182,212,0.15)] backdrop-blur-xl max-h-[90dvh] overflow-y-auto">
         {/* Subtle top indicator beam */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-cyan-400 to-blue-600"></div>
 
         {isModal && onCancel && (
           <button
             onClick={onCancel}
-            className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-900/80 hover:bg-slate-800 transition-colors"
+            className="absolute top-3 right-3 min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-xl text-slate-400 hover:text-white bg-slate-900/80 hover:bg-slate-800 transition-colors"
             title="Close"
+            aria-label="Close admin login"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         )}
 
@@ -118,7 +119,7 @@ export const AdminLoginPortal: React.FC<AdminLoginPortalProps> = ({
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter admin username"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 text-sm text-slate-100 placeholder-slate-600 transition-all font-mono"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 text-base sm:text-sm text-slate-100 placeholder-slate-600 transition-all font-mono"
               />
             </div>
           </div>
@@ -137,12 +138,13 @@ export const AdminLoginPortal: React.FC<AdminLoginPortalProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full pl-10 pr-11 py-2.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 text-sm text-slate-100 placeholder-slate-600 transition-all font-mono"
+                className="w-full pl-10 pr-11 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 text-base sm:text-sm text-slate-100 placeholder-slate-600 transition-all font-mono"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-1 rounded"
+                className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-500 hover:text-slate-300 p-2 rounded cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -154,7 +156,7 @@ export const AdminLoginPortal: React.FC<AdminLoginPortalProps> = ({
             id="admin-login-submit-btn"
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 via-cyan-500 to-blue-600 hover:from-purple-500 hover:via-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(168,85,247,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+            className="w-full min-h-[44px] py-3.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-cyan-500 to-blue-600 hover:from-purple-500 hover:via-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(168,85,247,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
           >
             {isLoading ? (
               <span className="inline-block animate-spin w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full" />
@@ -209,7 +211,7 @@ export const AdminLoginPortal: React.FC<AdminLoginPortalProps> = ({
 
   if (isModal) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn overflow-y-auto overscroll-contain">
         {content}
       </div>
     );

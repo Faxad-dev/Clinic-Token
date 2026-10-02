@@ -77,8 +77,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const selectedSlot = doctor.schedules.find((s) => s.shift === selectedShift);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-xl max-h-[94vh] flex flex-col rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain">
+      <div className="relative w-full max-w-xl max-h-[90dvh] my-auto flex flex-col rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-y-auto">
         {/* Header Bar */}
         <div className="bg-slate-50 px-4 sm:px-6 py-4 border-b border-slate-200 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
@@ -97,7 +97,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+            aria-label="Close booking modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -113,7 +114,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               <div className="text-xs uppercase font-mono text-slate-500 font-medium">Your Sequential Token Number</div>
-              <div className="text-5xl sm:text-6xl font-extrabold font-mono text-blue-700 my-2 tracking-widest">
+              <div className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-mono text-blue-700 my-2 tracking-wide sm:tracking-widest leading-[1.15]">
                 {confirmedToken.tokenDisplay}
               </div>
 
@@ -249,7 +250,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
                     placeholder="e.g. Asad Mehmood"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
 
@@ -264,7 +265,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     value={patientPhone}
                     onChange={(e) => setPatientPhone(e.target.value)}
                     placeholder="e.g. +92 300 1234567"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
               </div>
@@ -282,7 +283,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     required
                     value={patientAge}
                     onChange={(e) => setPatientAge(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm"
                   />
                 </div>
 
@@ -293,7 +294,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <select
                     value={patientGender}
                     onChange={(e) => setPatientGender(e.target.value as 'male' | 'female' | 'other')}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 focus:outline-none shadow-sm"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 focus:outline-none shadow-sm"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -312,7 +313,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
                   placeholder="Describe your symptoms (e.g. persistent cough, fever for 2 days, sharp pain)..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none shadow-sm"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-base sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none shadow-sm"
                 />
               </div>
 

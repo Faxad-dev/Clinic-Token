@@ -3,7 +3,7 @@ import { DoctorConsole } from '../doctor/DoctorConsole';
 import { LiveTokenTracker } from '../patient/LiveTokenTracker';
 import { PatientToken } from '../../types';
 import { queueService } from '../../services/queueStore';
-import { Layers, Stethoscope, Smartphone, Sparkles, Volume2 } from 'lucide-react';
+import { Layers, Stethoscope, Smartphone, Sparkles, Volume2, BellRing } from 'lucide-react';
 import { soundEngine } from '../AudioChime';
 
 export const SplitViewSimulator: React.FC = () => {
@@ -26,13 +26,29 @@ export const SplitViewSimulator: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => soundEngine.playTokenCallChime()}
-          className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 font-mono flex items-center gap-1.5 shrink-0 cursor-pointer"
-        >
-          <Volume2 className="w-4 h-4 text-cyan-400" />
-          <span>Test Audio Chime</span>
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => {
+              window.dispatchEvent(
+                new CustomEvent('aura:trigger-3spot-alert', {
+                  detail: { token: selectedToken },
+                })
+              );
+            }}
+            className="min-h-[44px] px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono flex items-center justify-center gap-1.5 cursor-pointer text-xs"
+          >
+            <BellRing className="w-4 h-4 text-amber-400 animate-pulse" />
+            <span>Simulate 3-Spots Alert</span>
+          </button>
+
+          <button
+            onClick={() => soundEngine.playTokenCallChime()}
+            className="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 font-mono flex items-center justify-center gap-1.5 cursor-pointer text-xs"
+          >
+            <Volume2 className="w-4 h-4 text-cyan-400" />
+            <span>Test Chime</span>
+          </button>
+        </div>
       </div>
 
       {/* Split Grid */}

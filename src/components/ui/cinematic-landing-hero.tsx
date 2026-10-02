@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 import { 
   Sparkles, 
-  RotateCcw, 
   Smartphone, 
   CheckCircle2, 
   Activity, 
@@ -133,6 +132,33 @@ const INJECTED_STYLES = `
       stroke-dashoffset: 402;
       stroke-linecap: round;
   }
+
+  /* Responsive & Reduced Motion Rules */
+  @media (max-width: 767px) {
+      .film-grain { display: none !important; }
+      .card-sheen { display: none !important; }
+      .screen-glare { display: none !important; }
+      .floating-ui-badge { 
+          backdrop-filter: none !important; 
+          -webkit-backdrop-filter: none !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+      }
+      .premium-depth-card { 
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important; 
+      }
+      .iphone-bezel { 
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7) !important; 
+      }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+      .film-grain { display: none !important; }
+      .mockup-wrapper, .main-card, .floating-badge-item, .phone-widget-item {
+          transform: none !important;
+          transition: none !important;
+          animation: none !important;
+      }
+  }
 `;
 
 export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -193,6 +219,7 @@ export function CinematicHero({
   // 1. High-Performance Real-Time 3D Mouse/Cursor Tilt
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (window.innerWidth < 768 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!mainCardRef.current || !mockupRef.current) return;
       const rect = mainCardRef.current.getBoundingClientRect();
       
@@ -256,6 +283,23 @@ export function CinematicHero({
   // 2. High-Fidelity Entrance Animation Sequence
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) {
+        gsap.set([".hero-title-1", ".hero-title-2", ".hero-pill-badge", ".main-card", ".mockup-wrapper", ".phone-widget-item", ".floating-badge-item", ".card-info-left", ".card-brand-right"], {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+          filter: "none",
+          rotationX: 0,
+          rotationY: 0
+        });
+        gsap.set(".progress-ring", { strokeDashoffset: 75 });
+        const counter = document.querySelector(".counter-val-num");
+        if (counter) counter.innerHTML = String(metricValue);
+        return;
+      }
+
       // Clean initial positions
       gsap.set(".hero-title-1", { opacity: 0, y: 25, filter: "blur(10px)" });
       gsap.set(".hero-title-2", { opacity: 0, y: 25, filter: "blur(10px)" });
@@ -376,13 +420,6 @@ export function CinematicHero({
     };
   }, [metricValue]);
 
-  // Restart intro animation on demand
-  const handleReplay = () => {
-    if (introTlRef.current) {
-      introTlRef.current.restart();
-    }
-  };
-
   // Toggle ring pulse animation
   const handleToggleRing = () => {
     setIsPlayingRing(!isPlayingRing);
@@ -418,10 +455,10 @@ export function CinematicHero({
           <span className="text-slate-400 font-mono text-[11px]">Sub-Second Sync</span>
         </div>
 
-        <h1 className="hero-title-1 text-3d-matte text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-2">
+        <h1 className="hero-title-1 text-3d-matte text-2xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-2 leading-[1.15]">
           {tagline1}
         </h1>
-        <h2 className="hero-title-2 text-silver-matte text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter">
+        <h2 className="hero-title-2 text-silver-matte text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter leading-[1.15]">
           {tagline2}
         </h2>
       </div>
@@ -457,7 +494,7 @@ export function CinematicHero({
                 {onBookClick && (
                   <button
                     onClick={onBookClick}
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 cursor-pointer group"
+                    className="min-h-[44px] px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 cursor-pointer group"
                   >
                     <span>Book Appointment</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -467,7 +504,7 @@ export function CinematicHero({
                 {onTrackClick && (
                   <button
                     onClick={onTrackClick}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer backdrop-blur-sm"
+                    className="min-h-[44px] px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer backdrop-blur-sm"
                   >
                     <Activity className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Track Token</span>
@@ -494,12 +531,13 @@ export function CinematicHero({
               className="mockup-wrapper lg:col-span-4 relative flex items-center justify-center py-4" 
               style={{ perspective: "1000px" }}
             >
-              <div className="relative w-[260px] sm:w-[280px]">
+              <div className="relative w-[min(260px,70vw)] sm:w-[280px]">
                 
                 {/* iPhone Hardware Chassis */}
                 <div
                   ref={mockupRef}
-                  className="relative w-full h-[490px] sm:h-[530px] rounded-[2.8rem] iphone-bezel flex flex-col will-change-transform transform-style-3d cursor-grab active:cursor-grabbing mx-auto"
+                  style={{ touchAction: 'pan-y' }}
+                  className="relative w-full h-[490px] sm:h-[530px] rounded-[2.8rem] iphone-bezel flex flex-col will-change-transform transform-style-3d cursor-grab active:cursor-grabbing mx-auto touch-pan-y"
                 >
                   {/* Physical Hardware Buttons */}
                   <div className="absolute top-[100px] -left-[3px] w-[3px] h-[22px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
@@ -645,12 +683,18 @@ export function CinematicHero({
                     </div>
 
                     {isInstalled ? (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-400/30">
+                      <span 
+                        style={{ textAlign: 'center' }}
+                        className="flex items-center justify-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-400/30 text-center"
+                      >
                         <Check className="w-3 h-3 text-emerald-400" />
                         <span>Installed</span>
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-semibold border border-blue-400/30">
+                      <span 
+                        style={{ textAlign: 'center' }}
+                        className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-semibold border border-blue-400/30 text-center"
+                      >
                         Free • Direct
                       </span>
                     )}
@@ -661,7 +705,7 @@ export function CinematicHero({
                     <button
                       id="btn-install-mobile-app-hero"
                       onClick={handleOpenInstall}
-                      className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer group active:scale-[0.98]"
+                      className="flex-1 min-h-[44px] py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer group active:scale-[0.98]"
                     >
                       {isInstalled ? (
                         <>
@@ -679,7 +723,7 @@ export function CinematicHero({
                     <button
                       id="btn-qr-mobile-app-hero"
                       onClick={handleOpenInstall}
-                      className="p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm"
+                      className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm flex items-center justify-center"
                       title="Scan QR code to install on your mobile phone"
                     >
                       <QrCode className="w-4 h-4 text-cyan-300" />
@@ -696,16 +740,6 @@ export function CinematicHero({
                   </div>
                 </div>
               </div>
-
-              {/* Replay 3D Intro Button */}
-              <button
-                onClick={handleReplay}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer pt-1"
-                title="Replay 3D Entrance Sequence"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Replay 3D Sequence</span>
-              </button>
             </div>
 
           </div>
